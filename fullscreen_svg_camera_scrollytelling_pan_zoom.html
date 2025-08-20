@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fullscreen SVG Scrollytelling</title>
+    <style>
+      :root {
+        --ink: #000000;
+        --panel: #ffffffcc;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow-x: hidden;
+        background: #ffffff;
+        color: var(--ink);
+        font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+          Arial;
+      }
+
+      /* Fullscreen sticky stage */
+      .stage-ctn {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        width: 100vw;
+        height: 80vh;
+      }
+      svg.stage {
+        width: 100vw;
+        height: 80vh;
+        display: block;
+        object-fit: cover;
+        padding: 12vh 0 20vh;
+      }
+
+      /* Narrative overlay */
+      .steps {
+        position: relative;
+        z-index: 1;
+        max-width: 720px;
+        margin-left: min(15vw, 200px);
+        padding: 12vh 0 20vh;
+      }
+      .spacer {
+        height: 5vh;
+      }
+      .step {
+        margin: 0 0 65vh;
+        background: var(--panel);
+        backdrop-filter: blur(6px);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+      }
+
+      .kicker {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      /* Art layers */
+      .layer {
+        opacity: 0.85;
+      }
+      .labels {
+        fill: #e5eef9;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- FULLSCREEN BACKGROUND ART -->
+    <div class="stage-ctn">
+      <svg
+        id="stage"
+        class="stage"
+        viewBox="0 0 1500 2000"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <image href="background.svg" x="0" y="0" width="1500" height="2000" />
+
+        <!-- SCENE LAYERS (all positioned within 1500x2000 space) -->
+        <g id="sun" class="layer">
+          <circle cx="750" cy="200" r="90" fill="#ffd166" />
+          <circle
+            cx="750"
+            cy="200"
+            r="140"
+            fill="none"
+            stroke="#ffd166"
+            stroke-opacity="0.25"
+            stroke-width="12"
+          />
+        </g>
+
+        <g id="city" class="layer">
+          <g fill="#1b2331">
+            <rect x="800" y="1000" width="120" height="240" />
+          </g>
+        </g>
+
+        <g id="hero" class="layer" transform="translate(520,800)">
+          <circle cx="60" cy="40" r="36" fill="#ggggg" />
+        </g>
+
+        <!-- CAMERA TARGETS (fixed positioning) -->
+        <g id="cam-wide" transform="translate(750,1000)">
+          <rect
+            x="0"
+            y="0"
+            width="100"
+            height="2000"
+            fill="none"
+            stroke="red"
+          />
+        </g>
+        <g id="cam-sun" transform="translate(750,200)">
+          <rect
+            x="-170"
+            y="0"
+            width="340"
+            height="2000"
+            fill="none"
+            stroke="green"
+          />
+        </g>
+        <g id="cam-city" transform="translate(750,800)">
+          <rect x="-260" y="-160" width="520" height="320" fill="none" />
+        </g>
+        <g id="cam-hero" transform="translate(580,800)">
+          <rect x="-160" y="-150" width="320" height="300" fill="none" />
+        </g>
+        <g id="cam-labels" transform="translate(700,780)">
+          <rect x="-180" y="-130" width="360" height="260" fill="none" />
+        </g>
+      </svg>
+    </div>
+
+    <!-- NARRATIVE OVERLAY (scroll to trigger camera moves) -->
+    <main class="steps" id="steps">
+      <div class="spacer"></div>
+
+      <section
+        class="step"
+        data-camera="#cam-wide"
+        data-zoom="fit"
+        data-speed="1200"
+      >
+        <div class="kicker"></div>
+        <h1>Sabotazyści</h1>
+        <p>
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum."
+        </p>
+        <p>
+          "Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+          accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae
+          ab illo inventore veritatis et quasi architecto beatae vitae dicta
+          sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+          aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos
+          qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui
+          dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed
+          quia non numquam eius modi tempora incidunt ut labore et dolore magnam
+          aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum
+          exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex
+          ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in
+          ea voluptate velit esse quam nihil molestiae consequatur, vel illum
+          qui dolorem eum fugiat quo voluptas nulla pariatur?"
+        </p>
+        <p>Autorzy: Daniel Flis</p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-sun"
+        data-zoom="cover"
+        data-speed="1200"
+      >
+        <h2>Zoom to the sun</h2>
+        <p>
+          We use a target group’s bounding box (with some padding) and tween the
+          viewBox.
+        </p>
+        <p class="badge">Step 2</p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-city"
+        data-zoom="fit"
+        data-padding="40"
+        data-speed="1200"
+      >
+        <h2>Pan across the skyline</h2>
+        <p>
+          <code>data-zoom</code> controls whether we preserve the whole box
+          (<code>fit</code>) or crop to fill (<code>cover</code>).
+        </p>
+        <p class="badge">Step 3</p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-hero"
+        data-zoom="cover"
+        data-padding="20"
+        data-speed="1300"
+      >
+        <h2>Move in on the hero</h2>
+        <p>
+          Target boxes can be arbitrary &mdash; just place/size the invisible
+          rects where you want the camera.
+        </p>
+        <p class="badge">Step 4</p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-labels"
+        data-zoom="fit"
+        data-speed="1000"
+      >
+        <h2>Callouts and details</h2>
+        <p>
+          Any layer can be a target. You can also compute boxes from real art
+          via <code>getBBox()</code>.
+        </p>
+        <p class="badge">Step 5</p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-wide"
+        data-zoom="fit"
+        data-speed="1000"
+      >
+        <h2>Reset to the wide view</h2>
+        <p>One last pullback to the full scene.</p>
+        <p class="badge">Step 6</p>
+      </section>
+
+      <div class="spacer"></div>
+    </main>
+
+    <script>
+      const svg = document.getElementById("stage");
+      const steps = Array.from(document.querySelectorAll(".step"));
+
+      // EASING
+      const easeInOutCubic = (t) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      // Parse/format viewBox helpers
+      const parseVB = (vb) => vb.split(/\s+/).map(Number); // [x,y,w,h]
+      const setVB = (xywh) =>
+        svg.setAttribute("viewBox", xywh.map((n) => +n.toFixed(3)).join(" "));
+
+      const getCurrentVB = () => parseVB(svg.getAttribute("viewBox"));
+
+      // Given a bbox and viewport aspect, expand to preserve aspect; pad adds uniform extra room
+      function fitBox(bbox, aspect, mode = "fit", pad = 0) {
+        let { x, y, width: w, height: h } = bbox;
+        w = Math.max(w, 1);
+        h = Math.max(h, 1);
+        // add padding equally
+        x -= pad;
+        y -= pad;
+        w += pad * 2;
+        h += pad * 2;
+        const boxAspect = w / h;
+        if (mode === "cover") {
+          // Expand the smaller dimension so the box fills the viewport and may crop
+          if (boxAspect > aspect) {
+            // too wide -> increase height
+            const newH = w / aspect;
+            y -= (newH - h) / 2;
+            h = newH;
+          } else {
+            // too tall -> increase width
+            const newW = h * aspect;
+            x -= (newW - w) / 2;
+            w = newW;
+          }
+        } else {
+          // 'fit' (default): expand the larger dimension to ensure full box is visible
+          if (boxAspect > aspect) {
+            // too wide -> increase height
+            const newH = w / aspect;
+            y -= (newH - h) / 2;
+            h = newH;
+          } else {
+            // too tall -> increase width
+            const newW = h * aspect;
+            x -= (newW - w) / 2;
+            w = newW;
+          }
+        }
+        return { x, y, width: w, height: h };
+      }
+
+      function getBBoxOfTarget(target) {
+        const el =
+          typeof target === "string" ? svg.querySelector(target) : target;
+        if (!el) return { x: 0, y: 0, width: 1500, height: 2000 }; // Correct dimensions
+        const b = el.getBBox();
+        return { x: b.x, y: b.y, width: b.width, height: b.height };
+      }
+
+      function animateToBox(destBox, duration = 1200) {
+        const startVB = getCurrentVB();
+        const endVB = [destBox.x, destBox.y, destBox.width, destBox.height];
+        const start = performance.now();
+        let rafId;
+        function tick(now) {
+          const t = Math.min(1, (now - start) / duration);
+          const e = easeInOutCubic(t);
+          const cur = startVB.map((s, i) => s + (endVB[i] - s) * e);
+          setVB(cur);
+          if (t < 1) rafId = requestAnimationFrame(tick);
+        }
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(tick);
+      }
+
+      function goToTarget(selector, mode = "fit", pad = 0, duration = 1200) {
+        const aspect = window.innerWidth / window.innerHeight;
+        const bbox = getBBoxOfTarget(selector);
+        const fitted = fitBox(bbox, aspect, mode, Number(pad) || 0);
+        animateToBox(fitted, Number(duration) || 1200);
+      }
+
+      // IntersectionObserver to trigger camera moves on active steps
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const s = entry.target;
+            const active =
+              entry.isIntersecting && entry.intersectionRatio > 0.55;
+            s.classList.toggle("is-active", active);
+            if (active) {
+              const target = s.dataset.camera;
+              const mode = s.dataset.zoom || "fit";
+              const pad = s.dataset.padding || 0;
+              const ms = s.dataset.speed || 1200;
+              goToTarget(target, mode, pad, ms);
+            }
+          });
+        },
+        { threshold: [0, 0.55, 1], rootMargin: "-20% 0% -20% 0%" }
+      );
+
+      steps.forEach((s) => io.observe(s));
+
+      // Keep camera framed correctly on resize
+      window.addEventListener("resize", () => {
+        const current = document.querySelector(".step.is-active") || steps[0];
+        if (current) {
+          goToTarget(
+            current.dataset.camera,
+            current.dataset.zoom || "fit",
+            current.dataset.padding || 0,
+            0
+          );
+        }
+      });
+
+      // Ensure first step applied on load
+      window.addEventListener("load", () => {
+        const first = steps[0];
+        first.classList.add("is-active");
+        goToTarget(
+          first.dataset.camera,
+          first.dataset.zoom || "fit",
+          first.dataset.padding || 0,
+          0
+        );
+      });
+    </script>
+  </body>
+</html>
