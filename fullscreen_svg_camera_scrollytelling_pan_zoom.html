@@ -108,7 +108,7 @@
     </style>
   </head>
   <body>
-    <!-- FULLSCREEN BACKGROUND ART -->
+    <!-- FULLSCREEN BACKGROUND ART, we have to make it transparent -->
     <div class="stage-ctn">
       <svg
         id="stage"
@@ -117,32 +117,60 @@
         xmlns="http://www.w3.org/2000/svg"
       >
         <!-- Static backdrop -->
-        <image href="background.svg" x="0" y="0" width="1500" height="2000" />
+        <image
+          href="Mapa europy ENG v1.svg"
+          x="0"
+          y="0"
+          width="1500"
+          height="2000"
+        />
 
-        <!-- PNG overlay that we will show/hide via steps -->
-        <image id="boom" class="toggle fade" href="sun.png" x="520" y="860"
-        width="380" height="240" /* remove the line below if you want to
-        preserve original PNG aspect */ preserveAspectRatio="none" />
+        <!-- every png i have -->
+        <image id="airbnb" class="toggle fade" href="png/art1.2-transparent.png"
+        x="920" y="795" width="100" height="100" /* remove the line below if you
+        want to preserve original PNG aspect */>
+
+        <image
+          id="trunk"
+          class="toggle fade"
+          href="png/art1.3.png"
+          x="0"
+          y="0"
+          width="100"
+          height="100"
+        />
+
+        <image
+          id="submarine"
+          class="toggle fade"
+          href="png/art1.4.png"
+          x="0"
+          y="0"
+          width="100"
+          height="100"
+        />
+
+        <image
+          id="explosion"
+          class="toggle fade"
+          href="png/art1.5.png"
+          x="0"
+          y="0"
+          width="100"
+          height="100"
+        />
+
+        <image
+          id="omniva"
+          class="toggle fade"
+          href="png/art1.6-transparent.png"
+          x="950"
+          y="530"
+          width="100"
+          height="100"
+        />
 
         <!-- SCENE LAYERS (positioned in 1500x2000 space) -->
-        <g id="sun" class="layer">
-          <circle cx="750" cy="200" r="90" fill="#ffd166" />
-          <circle
-            cx="750"
-            cy="200"
-            r="140"
-            fill="none"
-            stroke="#ffd166"
-            stroke-opacity="0.25"
-            stroke-width="12"
-          />
-        </g>
-
-        <g id="city" class="layer">
-          <g fill="#1b2331">
-            <rect x="800" y="1000" width="120" height="240" />
-          </g>
-        </g>
 
         <g id="hero" class="layer" transform="translate(520,800)">
           <circle cx="60" cy="40" r="36" fill="#888888" />
@@ -150,34 +178,20 @@
 
         <!-- CAMERA TARGETS (you can hide strokes later; left visible for debugging) -->
         <g id="cam-wide" transform="translate(750,1000)">
-          <rect
-            x="0"
-            y="0"
-            width="100"
-            height="2000"
-            fill="none"
-            stroke="red"
-          />
+          <rect x="0" y="0" width="100" height="2000" fill="none" />
         </g>
-        <g id="cam-sun" transform="translate(750,200)">
+        <g id="cam-airbnb" transform="translate(750,200)">
           <rect
-            x="470"
-            y="0"
-            width="340"
-            height="500"
+            x="810"
+            y="720"
+            width="200"
+            height="200"
             fill="none"
             stroke="green"
           />
         </g>
-        <g id="cam-city" transform="translate(750,800)">
-          <rect
-            x="-260"
-            y="-160"
-            width="520"
-            height="320"
-            fill="none"
-            stroke="orange"
-          />
+        <g id="cam-omniva" transform="translate(750,800)">
+          <rect x="910" y="530" width="100" height="100" fill="none" />
         </g>
         <g id="cam-hero" transform="translate(580,800)">
           <rect
@@ -232,6 +246,8 @@
         data-camera="#cam-wide"
         data-zoom="fit"
         data-speed="1200"
+        data-hide="#airbnb"
+        data-hide="#omniva"
       >
         <div class="kicker"></div>
         <h1>Sabotazyści</h1>
@@ -242,24 +258,27 @@
       <!-- Show the PNG on this step -->
       <section
         class="step"
-        data-camera="#cam-sun"
+        data-camera="#cam-airbnb"
         data-zoom="cover"
         data-speed="1200"
-        data-show="#boom"
+        data-show="#airbnb"
       >
-        <h2>Zoom to the sun</h2>
-        <p>We tween the viewBox to a target box. PNG fades in here.</p>
+        <p>
+          Klatka 8.Derkavets w Airbnb aktywuje bomby - czasowy zapalnik, jakieś
+          druciki
+        </p>
         <p class="badge">Step 2</p>
       </section>
 
       <!-- Hide the PNG again -->
       <section
         class="step"
-        data-camera="#cam-city"
+        data-camera="#cam-omniva"
         data-zoom="fit"
         data-padding="40"
         data-speed="1200"
-        data-hide="#boom"
+        data-hide="#airbnb"
+        data-show="#omniva"
       >
         <h2>Pan across the skyline</h2>
         <p>
