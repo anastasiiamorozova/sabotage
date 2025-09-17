@@ -3,21 +3,47 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Fullscreen SVG Scrollytelling</title>
+    <title>Paczka z bombą</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      #recorder {
+        display: none !important;
+      }
+
       :root {
         --ink: #000000;
         --panel: #ffffffcc;
       }
-      html,
       body {
         margin: 0;
         height: 100%;
-        overflow-x: hidden;
-        background: #ffffff;
-        color: var(--ink);
-        font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
-          Arial;
+        font-family: "Noto Serif", sans-serif;
+      }
+
+      h1 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 600;
+        font-size: 2.5rem;
+        line-height: 1.2;
+        margin: 1rem;
+      }
+      h2 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 600;
+        font-size: 1.4rem;
+        line-height: 1.2;
+        margin: 1rem;
+      }
+      .step p {
+        text-align: left;
+        margin: 1rem;
       }
 
       /* Fullscreen sticky stage */
@@ -28,6 +54,7 @@
         width: 100vw;
         height: 80vh;
       }
+
       svg.stage {
         width: 100vw;
         height: 80vh;
@@ -41,24 +68,27 @@
         position: relative;
         z-index: 1;
         max-width: 500px;
-        margin-left: min(15vw, 200px);
-        padding: 12vh 0 20vh;
+        margin-left: min(10vw, 200px);
+        margin-right: min(5vw, 200px);
+        padding: 12vh 0 10vh;
       }
       .spacer {
         height: 5vh;
       }
       .step {
+        align-items: center;
+        justify-content: center;
         margin: 0 0 65vh;
         background: var(--panel);
         backdrop-filter: blur(6px);
         border-radius: 12px;
-        padding: 1.1rem 1.25rem;
+        padding: 1.25rem 1.25rem;
       }
-      .kicker {
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-weight: 700;
-        color: var(--muted);
+      .step img,
+      .step figure {
+        display: block;
+        max-width: 100%;
+        height: auto;
       }
 
       /* Art layers */
@@ -67,31 +97,6 @@
       }
       .labels {
         fill: #e5eef9;
-      }
-
-      /* Recorder panel */
-      #recorder {
-        position: fixed;
-        top: 12px;
-        right: 12px;
-        z-index: 2; /* above steps */
-        width: 320px;
-        background: #111;
-        color: #eee;
-        padding: 10px 12px;
-        border-radius: 10px;
-        font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
-          Arial;
-      }
-      #recorder .hint {
-        opacity: 0.75;
-        margin: 6px 0 8px;
-      }
-      #recorder textarea {
-        width: 100%;
-        height: 140px;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        resize: vertical;
       }
 
       /* toggling visibility for SVG images/layers */
@@ -105,9 +110,50 @@
       .fade {
         transition: opacity 400ms ease;
       }
+      .brand-strip {
+        position: relative; /* not sticky, scrolls with page */
+        z-index: 3; /* stays above the stage/steps if overlapping */
+        width: 100%;
+        background: transparent;
+        display: flex;
+        justify-content: center; /* center horizontally */
+        align-items: center; /* center vertically within the strip */
+        padding: 12px 0; /* strip height */
+        margin: 0 0 8px; /* small gap below, optional */
+      }
+
+      .brand-strip img {
+        height: 72px; /* make it bigger; tweak as needed */
+        max-width: 90vw; /* avoid overflow on small screens */
+        object-fit: contain;
+        display: block;
+      }
+      .brand-strip {
+        text-align: center;
+      }
+      .brand-strip .brand-home {
+        display: inline-block;
+      }
+      .brand-strip img {
+        display: block;
+        height: 72px;
+      }
     </style>
   </head>
   <body>
+    <header class="brand-strip">
+      <a
+        class="brand-home"
+        href="https://frontstory.pl/"
+        aria-label="Frontstory — home"
+      >
+        <img
+          src="https://frontstory.pl/wp-content/uploads/2025/09/FRONTSTORY_logo_black.png"
+          alt="Frontstory"
+        />
+      </a>
+    </header>
+
     <!-- FULLSCREEN BACKGROUND ART, we have to make it transparent -->
     <div class="stage-ctn">
       <svg
@@ -118,100 +164,176 @@
       >
         <!-- Static backdrop -->
         <image
-          href="Mapa europy ENG v1.svg"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/mapa.svg"
           x="0"
           y="0"
-          width="1500"
-          height="2000"
+          width="2000"
+          height="1300"
         />
 
-        <!-- every png i have -->
-        <image id="airbnb" class="toggle fade" href="png/art1.2-transparent.png"
-        x="920" y="795" width="100" height="100" /* remove the line below if you
-        want to preserve original PNG aspect */>
-
+        <!-- every svg i have -->
         <image
-          id="trunk"
+          id="lodz"
           class="toggle fade"
-          href="png/art1.3.png"
-          x="0"
-          y="0"
-          width="100"
-          height="100"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/lodz.svg"
+          x="1314"
+          y="125"
         />
-
         <image
-          id="submarine"
+          id="miroshnikov"
           class="toggle fade"
-          href="png/art1.4.png"
-          x="0"
-          y="0"
-          width="100"
-          height="100"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/miroshnikov.svg"
+          x="1314"
+          y="125"
         />
 
         <image
-          id="explosion"
+          id="baburov"
           class="toggle fade"
-          href="png/art1.5.png"
-          x="0"
-          y="0"
-          width="100"
-          height="100"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/baburov.svg"
+          x="1314"
+          y="125"
         />
-
         <image
           id="omniva"
           class="toggle fade"
-          href="png/art1.6-transparent.png"
-          x="950"
-          y="530"
-          width="100"
-          height="100"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/omniva.svg"
+          x="1372"
+          y="297"
+        />
+        <image
+          id="ryga"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/ryga.svg"
+          x="1286"
+          y="435"
+        />
+        <image
+          id="bagaznik"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/bagaznik.svg"
+          x="1213"
+          y="500"
+        />
+        <image
+          id="tg"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/tg.svg"
+          x="1232"
+          y="571"
+        />
+        <image
+          id="airbnb"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/airbnb.svg"
+          x="1300"
+          y="604"
+        />
+        <image
+          id="dhl"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/dhl.svg"
+          x="1332"
+          y="517"
         />
 
-        <!-- SCENE LAYERS (positioned in 1500x2000 space) -->
+        <image
+          id="fire-pl"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/fire-pl.svg"
+          x="1072"
+          y="675"
+        />
 
-        <g id="hero" class="layer" transform="translate(520,800)">
-          <circle cx="60" cy="40" r="36" fill="#888888" />
-        </g>
+        <image
+          id="fire-uk"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/fire-uk.svg"
+          x="204"
+          y="656"
+        />
 
-        <!-- CAMERA TARGETS (you can hide strokes later; left visible for debugging) -->
-        <g id="cam-wide" transform="translate(750,1000)">
-          <rect x="0" y="0" width="100" height="2000" fill="none" />
+        <image
+          id="fire-ge"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/fire-ge.svg"
+          x="754"
+          y="694"
+        />
+
+        <image
+          id="granica"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/granica.svg"
+          x="1113"
+          y="830"
+        />
+
+        <image
+          id="bus"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/bus.svg"
+          x="1436"
+          y="936"
+        />
+
+        <image
+          id="gru"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/gru.svg"
+          x="1709"
+          y="367"
+        />
+        <image
+          id="suranovas"
+          class="toggle fade"
+          href="https://frontstory.pl/wp-content/uploads/2025/09/suranovas.svg"
+          x="1332"
+          y="599"
+        />
+
+        <!-- CAMERA TARGETS -->
+        <g id="cam-wide">
+          <rect x="0" y="0" width="2000" height="1100" fill="none" />
         </g>
-        <g id="cam-airbnb" transform="translate(750,200)">
-          <rect
-            x="810"
-            y="720"
-            width="200"
-            height="200"
-            fill="none"
-            stroke="green"
-          />
+        <g id="cam-lodz">
+          <rect x="1250" y="40" width="500" height="250" fill="none" />
         </g>
-        <g id="cam-omniva" transform="translate(750,800)">
-          <rect x="910" y="530" width="100" height="100" fill="none" />
+        <g id="cam-ryga">
+          <rect x="1200" y="350" width="200" height="150" fill="none" />
         </g>
-        <g id="cam-hero" transform="translate(580,800)">
-          <rect
-            x="-160"
-            y="-150"
-            width="320"
-            height="300"
-            fill="none"
-            stroke="purple"
-          />
+        <g id="cam-fires">
+          <rect x="180" y="600" width="1150" height="350" fill="none" />
         </g>
-        <g id="cam-labels" transform="translate(700,780)">
-          <rect
-            x="-180"
-            y="-130"
-            width="360"
-            height="260"
-            fill="none"
-            stroke="cyan"
-          />
+        <g id="cam-omniva">
+          <rect x="1300" y="290" width="250" height="150" fill="none" />
+        </g>
+        <g id="cam-car">
+          <rect x="1250" y="430" width="130" height="80" fill="none" />
+        </g>
+        <g id="cam-bagaznik">
+          <rect x="1200" y="500" width="130" height="80" fill="none" />
+        </g>
+        <g id="cam-jarik">
+          <rect x="1200" y="550" width="130" height="80" fill="none" />
+        </g>
+        <g id="cam-litwa">
+          <rect x="1000" y="400" width="450" height="320" fill="none" />
+        </g>
+        <g id="cam-gru">
+          <rect x="1660" y="380" width="200" height="130" fill="none" />
+        </g>
+        <g id="cam-airbnb">
+          <rect x="1260" y="580" width="150" height="100" fill="none"/>
+        </g>
+        <g id="cam-granica">
+          <rect x="1000" y="870" width="400" height="150" fill="none"/>
+        </g>
+        <g id="cam-bus">
+          <rect x="1250" y="970" width="450" height="150" fill="none"/>
+        </g>
+        <g id="cam-dhl">
+          <rect x="1300" y="500" width="150" height="100" fill="none"/>
         </g>
 
         <!-- Big transparent hit layer for rectangle recorder (disabled until toggled) -->
@@ -245,80 +367,905 @@
         class="step"
         data-camera="#cam-wide"
         data-zoom="fit"
-        data-speed="1200"
-        data-hide="#airbnb"
-        data-hide="#omniva"
+        data-speed="2000"
       >
-        <div class="kicker"></div>
-        <h1>Sabotazyści</h1>
-        <p>Intro copy…</p>
-        <p>Autorzy: Daniel Flis</p>
+        <h1>Paczka z bombą. <br />Kto stał za atakiem GRU na Europę</h1>
+        <ul>
+          <li>
+            Szczegóły najgroźniejszej operacji rosyjskiego wywiadu, która
+            spowodowała eksplozje w Polsce i Europie. Jej tropy wiodą do
+            radzieckiej, atomowej łodzi podwodnej
+          </li>
+          <br />
+          <li>
+            Zidentyfikowaliśmy kilkanaście osób, które brały udział w
+            transporcie materiałów wybuchowych na zlecenie GRU. Koordynatorem
+            sabotażystów był mężczyzna skazany z paragrafu za przemyt materiałów
+            radioaktywnych
+          </li>
+          <br />
+          <li>
+            Otworzyliśmy trasę wędrówki wybuchowych paczek - zanim eksplodowały,
+            wiele razy przekroczyły granice kilku krajów Unii, nie wzbudzając
+            podejrzeń
+          </li>
+          <br />
+          <li>
+            Sprawa wybuchających paczek łączy się z podpaleniami wielkich
+            sklepów w Polsce i na Litwie
+          </li>
+        </ul>
+      </section>
+
+            <section
+        class="step"
+        data-camera="#cam-wide"
+        data-zoom="fit"
+        data-speed="2000"
+      >
+        <p><i><b>Autorzy:</b> Daniel Flis, Anna Gielewska, FRONTSTORY (Polska), VSquare.org
+</i></p>
+        <p><i><b>Wizualizacja interaktywna:</b> Anastasiia Morozova, FRONTSTORY/VSquare
+</i></p>
+<p><i><b>Rysunki:</b> Alisa Szorochowa
+</i></p>
+<p><i><b>Research OSINT:</b> Alicja Pawłowska, Anastasiia Morozova,  FRONTSTORY (Polska)
+</i></p>
+
+<p><i>Tekst jest rezultatem międzynarodowego śledztwa, w którym biorą udział:
+
+Inga Spriņģe, Re:Baltica (Łotwa), Indre Makaraitytė, LRT (Litwa), Holger Roonemaa, Delfi Estonia, Michael Weiss, Kato Kopaleishvili, Christo Grozev, The Insider</i></p>
       </section>
 
       <!-- Show the PNG on this step -->
       <section
         class="step"
-        data-camera="#cam-airbnb"
+        data-camera="#cam-lodz"
         data-zoom="cover"
-        data-speed="1200"
-        data-show="#airbnb"
+        data-speed="2000"
+        data-show="#lodz"
       >
         <p>
-          Klatka 8.Derkavets w Airbnb aktywuje bomby - czasowy zapalnik, jakieś
-          druciki
+          Ta szpiegowska historia zaczyna się kilka dekad temu, w czasach ZSRR,
+          na radzieckim okręcie podwodnym, gdzieś między Murmańskiem a Morzem
+          Śródziemnym. Jej bohaterowie, Andriej, Nikołaj i dwóch Aleksandrów,
+          poznają się na przełomie lat 80. i 90. ubiegłego wieku. Wszyscy służą
+          na tej samej, podwodnej jednostce, która kryjąc się przed NATO-wskimi
+          radarami penetruje głębiny.
         </p>
-        <p class="badge">Step 2</p>
-      </section>
-
-      <!-- Hide the PNG again -->
-      <section
-        class="step"
-        data-camera="#cam-omniva"
-        data-zoom="fit"
-        data-padding="40"
-        data-speed="1200"
-        data-hide="#airbnb"
-        data-show="#omniva"
-      >
-        <h2>Pan across the skyline</h2>
         <p>
-          <code>data-zoom</code> chooses <code>fit</code> vs <code>cover</code>.
+          Aleksandr Mirosznikow, pogodny blondyn z szerokim wąsem, jest wśród
+          nich najwyższy rangą. Ma stopień komandora: tuż po upadku ZSRR przez
+          trzy lata dowodzi okrętem podwodnym K-387, jednostką z napędem
+          atomowym. Jego służba to tajne misje – w czasie zimnej wojny
+          radzieckie okręty atomowe eskortują swoją nawodną flotę i tropią
+          jednostki NATO, prowadzą misje wywiadowcze. Są w stanie podpływać do
+          wybrzeży USA i wynurzać się w okolicach Bieguna Północnego. Dla
+          rekrutów służba w marynarce wojennej trwa dłużej, niż w innych
+          wojskach, okręty i łodzie podwodne wymagają wykwalifikowanej obsługi.
         </p>
-        <p class="badge">Step 3</p>
       </section>
-
       <section
         class="step"
-        data-camera="#cam-hero"
+        data-camera="#cam-lodz"
         data-zoom="cover"
-        data-padding="20"
-        data-speed="1300"
+        data-speed="2000"
+        data-show="#miroshnikov"
       >
-        <h2>Move in on the hero</h2>
-        <p>Target boxes can be arbitrary.</p>
-        <p class="badge">Step 4</p>
+        <p>
+          Trzydzieści lat później komandor Aleksandr zaprasza kolegów z okrętu
+          do jeszcze jednej, ostatniej misji.
+        </p>
+        <figure>
+          <img
+            src="https://frontstory.pl/wp-content/uploads/2025/09/miroshnikov1.jpg"
+            alt="Komandor Aleksandr"
+          />
+          <figcaption>
+            <i>Fot. Aleksandr Henrykowicz Mirosznikow.</i>
+          </figcaption>
+        </figure>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-lodz"
+        data-zoom="cover"
+        data-speed="2000"
+        data-show="#baburov"
+      >
+        <p>
+          Wczesnym latem 2024 r. były marynarz Nikołaj dzwoni do byłego
+          marynarza Andrieja. Andriej Baburow od dawna już nie służy w
+          marynarce, do rezerwy przeszedł w 1993 r. jako kapitan drugiego
+          stopnia. Rok później założył w Rosji spółkę logistyczną Baltic Escort.
+          Wciąż kieruje firmą, jest biznesmenem i postacią szanowaną w
+          Petersburgu: wielokrotnym prezesem stowarzyszenia spedytorów,
+          członkiem stowarzyszeń weteranów. Mimo 63 lat na karku Andriej idzie z
+          duchem czasu, od kilku miesięcy jego firma proponuje klientom omijanie
+          zachodnich sankcji: „Indywidualne podejście. Rozliczenia w rublach.
+          [Cena:] od dwóch procent wartości faktury" – kusi na swojej stronie
+          Baltic Escort.
+        </p>
+
+        <p>
+          Nikołaj dzwoni, żeby przekazać biznesmenowi Andriejowi prośbę od
+          komandora Aleksandra. Były dowódca choruje i szuka na Łotwie kogoś,
+          kto odbierze jego paczkę z poduszkami do masażu szyi. Z paczką jest
+          kłopot: komandor wysłał ją krewnym do Rygi, ale ci nie zdążą jej
+          odebrać, są w podróży. Paczkę, raptem parę kilo, trzeba zawieźć im do
+          Wilna.
+        </p>
+        <p>
+          Historia peregrynacji paczki brzmi dziwnie, ale Andriej się zgadza się
+          pomóc. Nie można odmówić, gdy komandor prosi.
+        </p>
       </section>
 
       <section
         class="step"
-        data-camera="#cam-labels"
+        data-camera="#cam-fires"
         data-zoom="fit"
-        data-speed="1000"
+        data-speed="2000"
+        data-show="#fire-uk, #fire-pl, #fire-ge"
       >
-        <h2>Callouts and details</h2>
-        <p>Targets can be computed with <code>getBBox()</code> too.</p>
-        <p class="badge">Step 5</p>
+        <h2>Operacja GRU. Zasiać strach</h2>
+        <p>
+          Andriej Baburow jest obecnie poszukiwany przez litewską policję, bo
+          dziś, ponad rok od tamtego telefonu wiadomo, że w paczce dla komandora
+          oprócz poduszek do leczniczych masaży podróżowały materiały wybuchowe.
+          Sabotażyści rozdzielili je na cztery przesyłki, z których trzy w lipcu
+          2024 r. zapaliły się w magazynach firm logistycznych i na lotniskach w
+          Polsce, Niemczech i Wielkiej Brytanii. Szczęśliwym trafem żadna z nich
+          nie wywołała pożaru na pokładzie samolotu, doprowadzając do
+          katastrofy.
+        </p>
+        <p>
+          Polska i litewska prokuratura uważają, że za paczkami i podpaleniami
+          stało GRU, rosyjski wywiad wojskowy.
+        </p>
+        <p>
+          Była to najgroźniejsza akcja rosyjskich służb przeciw Europie od
+          wybuchu pełnoskalowej wojny w Ukrainie. Równolegle do niej GRU
+          zorganizowało operację wysłania innych paczek – tym razem bez
+          materiałów wybuchowych – z Polski do USA i Kanady. Obie operacje (tę z
+          paczką komandora i tę z wysyłką do Ameryki Północnej) bada dziś polska
+          prokuratura jako odrębne wątki w jednym śledztwie. Nad a sprawą
+          pracuje ze śledczymi z Litwy.
+        </p>
       </section>
 
       <section
         class="step"
         data-camera="#cam-wide"
         data-zoom="fit"
-        data-speed="1000"
+        data-speed="2000"
       >
-        <h2>Reset to the wide view</h2>
-        <p>One last pullback.</p>
-        <p class="badge">Step 6</p>
+        <p>
+          FRONTSTORY.PL wspólnie z dziennikarzami Re:Baltica z Łotwy, portalem
+          The Insider, estońskim Delfi, litewską telewizją publiczną LRT i
+          VSquare, ustaliło szczegóły tej operacji. Na podstawie dokumentów,
+          rozmów z oficerami zachodnich służb i krewnymi sprawców, odtworzyliśmy
+          przebieg trasy wybuchowych przesyłek. Jak się okazuje - przez niemal
+          miesiąc wędrowały między krajami bałtyckimi i Polską. Udało nam się
+          zidentyfikować nie tylko zwerbowanych przez Telegram tzw. „agentów
+          jednorazowego użytku”, ale także ich koordynatorów i zleceniodawców z
+          Rosji.
+        </p>
+        <p>
+          Ta historia, podobnie jak historie naszych partnerów, miała zostać
+          opublikowana jutro rano - jednak po otrzymaniu pytań od dziennikarzy
+          litewska prokuratura upubliczniła część naszych ustaleń. W związku z
+          tym postanowiliśmy przyspieszyć publikację. W najbliższych dniach i
+          tygodniach będziemy informować czytelników o kolejnych detalach sprawy
+          rosyjskich sabotaży.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-wide"
+        data-zoom="fit"
+        data-speed="2000"
+      >
+        <p>
+          Opisywana przez nas operacja z paczkami z 2024 r. nie była
+          jednorazowa. W tym samym roku Rosja zorganizowała szereg podobnych
+          sabotaży w Polsce, krajach bałtyckich i zachodniej Europie. Tylko w
+          Warszawie podpalono wtedy centrum handlowe przy ul. Marywilskiej,
+          skład budowlany i hipermarket Obi. Wszystkie te akcje zostały zlecone
+          przez Rosjan, policja złapała większość ich sprawców.
+        </p>
+        <p>
+          Podobnie jak w przypadku ataku rosyjskich dronów na Polskę w ubiegłym
+          tygodniu, Moskwa zaprzecza, że ma związek z sabotażami. - Nie
+          wykluczamy, że to po prostu kolejne fake newsy lub przejaw ślepej
+          rusofobii – tak w kwietniu rzecznik Kremla Dmitrij Pieskow kwituje
+          pytania agencji Reuters o wybuchowe paczki.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-lodz"
+        data-zoom="cover"
+        data-speed="3000"
+        data-show="#lodz"
+      >
+        <h2>Komandor: umiera wraz z tajemnicą</h2>
+        <p>
+          - Czuję się winny temu, co się stało. Nie chciałem nikogo wpędzić w
+          kłopoty – zapewnia dziś były marynarz i biznesmen Andriej Baburow.
+          Baburow, jak ustalili nasi partnerzy z Re:Baltica, przebywa w Rosji.
+          Wciąż mieszka w Petersburgu, dopóki nie wybierze się do Europy może
+          gwizdać na list gończy, który wystawili za nim Litwini (podejrzewają
+          go o organizację sabotażu).
+        </p>
+        <figure>
+          <img
+            src="https://frontstory.pl/wp-content/uploads/2025/09/Baburov-1.jpg"
+            alt="Andrej Baburow"
+          />
+          <figcaption>
+            <i>Andrej Baburow</i>
+          </figcaption>
+        </figure>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-lodz"
+        data-zoom="cover"
+        data-speed="3000"
+        data-show="#lodz"
+      >
+        <p>
+          To od niego wiemy, że nadawcą paczki był komandor Aleksandr
+          Mirosznikow, a pośrednikiem - Nikołaj Zagorodny, jego dawny podwładny
+          z marynarki. Aby potwierdzić swoją wersję wydarzeń Baburow podaje
+          numer telefonu żony Nikołaja (sam Nikołaj miał niedawno przejść udar i
+          rzekomo nie może rozmawiać).
+        </p>
+
+        <p>
+          Kobieta potwierdza wersję Baburowa: - Przesyłanie paczek między Rosją
+          a Europą było powszechną praktyką wśród przyjaciół - twierdzi.
+        </p>
+
+        <p>
+          A co o swojej wybuchowej paczce mówi sam komandor Mirosznikow, który
+          poprosił o pomoc starych podwodniaków? Tego się już nie dowiemy.
+          Mirosznikow umiera na raka na początku 2025 r.
+        </p>
+
+        <p>
+          Do opowieści o komandorze wysyłającym paczkę rodzinie trzeba więc
+          podchodzić z dystansem. Tym bardziej, że w co najmniej w jednym
+          punkcie nie pokrywa się z naszymi ustaleniami.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-omniva"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#omniva"
+      >
+        <h2>Bomba: trafia do paczkomatu</h2>
+        <p>
+          Według Andrieja komandor Mirosznikow osobiście nadaje paczkę, która
+          przyjeżdża do Rygi autobusem. Ale nasi rozmówcy z europejskich organów
+          ścigania twierdzą, że paczka dociera na Łotwę jako przesyłka do
+          paczkomatu (podobnego do tych znanych w Polsce).
+        </p>
+        <p>
+          Andriej Baburow w swojej wersji pomija fakt, że przesyłka podróżuje
+          przez Łotwę nie raz, a dwa razy.
+        </p>
+        <p>
+          Początkowo nadawca (nie znamy jego tożsamości) 24 czerwca 2024 r.
+          wysyła ją z Narwy. To nieduża estońska miejscowość nad Zatoką Fińską,
+          tuż przy granicy z Rosją, 140 km od Petersburga. Nazywana jest
+          najbardziej rosyjskim miastem Unii Europejskiej, 34 proc. jego
+          mieszkańców to Rosjanie.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-omniva"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#omniva"
+      >
+        <p>
+          Europejskie organy ścigania ustalają, że przesyłka została dostarczona
+          z Narwy do Rygi za pośrednictwem estońskiej firmy kurierskiej Omniva.
+        </p>
+        <p>
+          Nie wiadomo, czy w paczce z Narwy znajdowały się już materiały
+          wybuchowe. Jeśli nie, ktoś musiał włożyć je tam na późniejszym etapie.
+        </p>
+
+        <p>
+          Pierwszy kontakt z przesyłką ma Vasilijs Kovacs, atletycznie zbudowany
+          Ukrainiec mieszkający na Łotwie. Nie pływał na okrętach podwodnych, po
+          prostu petersburski biznesmen Andriej Baburow zna go od lat, jest
+          ojcem chrzestnym jego syna. To właśnie Kovacsa poprosi o odebranie
+          paczki od komandora.
+        </p>
+        <p>Kovacs, choć niechętnie, zgadza się pomóc.</p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-car"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#ryga"
+      >
+        <h2>Pistolet: znajduje się pod zlewem</h2>
+        <p>
+          Wraz z synami swojej siostry – dwudziestoletnimi mężczyznami – 27
+          czerwca Kovacs wsiada do toyoty land cruiser i zawozi paczkę do Wilna.
+          W rozmowie z Re:Baltica Andriej przypomina sobie, że Kovacs był zły,
+          gdy dzwonił z Wilna: nikt nie odebrał paczki, więc rzekomo zostawił
+          otwarty samochód i poszedł coś zjeść, adresaci sami mieli zabrali
+          przesyłkę z bagażnika auta.
+        </p>
+        <p>
+          Reporterzy Re:Baltica skontaktowali się z członkiem rodziny Kovacsa
+          (chce zachować anonimowość). Według niego Vasilijs to człowiek wielu
+          talentów, w latach 90. założył w Rosji firmę, którą bezprawnie mu
+          odebrano, na Łotwie handlował sprzętem elektronicznym, prowadził
+          hodowlę koni i dorabiał jako marynarz na statkach między Hiszpanią,
+          Majorką i Kubą.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-car"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#ryga"
+      >
+        <p>
+          Podczas przeszukania jego domu łotewskie służby znajdą pod kuchennym
+          zlewem pistolet z zatartym numerem seryjnym oraz przedmiot
+          przypominający urządzenie do tłumienia sygnałów GSM. W jego domu
+          odnajdą też akta sprawy karnej dotyczącej zabójstwa łotewskiego
+          gangstera z 2022 r. Vasilijs twierdzi, że nie wie, skąd wzięła się u
+          niego broń. Sądowe akta? Ktoś podrzucił mu do skrzynki, żeby pomógł w
+          sprawie. Jak mógłby to zrobić? Nie wiadomo.
+        </p>
+        <p>
+          Nie przyznaje się też do udziału w sabotażu, twierdzi, że przewoził
+          tylko poduszki do masażu. Nie wie, kto je odebrał. Gdy w Wilnie
+          wrócvił z obiadu, bagażnik toyoty był już pusty.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-bagaznik"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#bagaznik"
+      >
+        <h2>Ekstradycja: Polska ściga się z Rosją</h2>
+        <p>
+          Po dostarczeniu przesyłki do Wilna koledzy z łodzi podwodnej tracą ją
+          z oczu. Ale wbrew ich zapewnieniom paczki nie odbierają krewni
+          komandora. Z bagażnika toyoty wyciąga ją Wiaczesław Czebanenko,
+          33-letni Ukrainiec, według The Guardian nazywany „Pączkiem”. „Pączek”
+          najprawdopodobniej nie zna ani Vasilijsa, ani biznesmena Andrieja, ani
+          komandora Aleksandra.
+        </p>
+        <p>
+          „Pączek” w ojczyźnie spędził ponad pięć lat w więzieniu za gwałt na
+          żonie. W 2024 r. zamieszkał w Warszawie wspólnie z Rosjaninem
+          Aleksandrem Bezrukawyim. Dziś obaj są podejrzani o przygotowanie na
+          zlecenie GRU innej akcji sabotażowej: wysyłki testowych paczek do USA
+          i Kanady (bez materiałów wybuchowych).
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-bagaznik"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#bagaznik"
+      >
+        <p>
+          Bezrukawyj został aresztowany w Bośni i Hercegowinie, gdzie z
+          instruktorami związanymi z Grupą Wagnera szkolił Mołdawian z
+          rozbijania ulicznych demonstracji. O jego ekstradycję – jak pisała
+          Gazeta Wyborcza – zawnioskowały do Bośni i Hercegowiny władze Rosji,
+          które rzekomo chciały sądzić go za przestępstwa popełnione w
+          ojczyźnie. W lutym 2025 r. Sarajewo wydało go jednak Polsce (nasz
+          wniosek o ekstradycję został złożony wcześniej).
+        </p>
+        <p>
+          Bezrukawyj siedzi dziś w osławionym areszcie w Radomiu, w którym
+          oprócz najgroźniejszych przestępców trzymani są między innymi rosyjscy
+          szpiedzy.
+        </p>
+        <p>
+          Wiemy, że kolegą „Pączka” w Polsce był Siergiej Jewsejew, oskarżony
+          przez opolską prokuraturę o udział w kradzieży 14 samochodów w całej
+          Europie. Jewsejew pomagał w zdobyciu aut do operacji z paczkami - za
+          ten czyn również usłyszał w Polsce zarzuty.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-jarik"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#tg"
+      >
+        <h2>Rosjanie: wynajmują kryminalistę</h2>
+        <p>
+          „Pączek” nie jest samotnym strzelcem, nie działa z własnej inicjatywy.
+          Wykonuje zadania, które przez aplikację Telegram zleca mu konto o
+          nazwie „Jarik Deppa”. Wspólnie z dziennikarzami The Insider
+          ustaliliśmy jego tożsamość.
+        </p>
+        <figure>
+          <img
+            src="https://frontstory.pl/wp-content/uploads/2025/09/Mikhailov.png"
+            alt="Mikhailov"
+          />
+          <figcaption>
+            <i>„Jarik” Jarosław Michajłow</i>
+          </figcaption>
+        </figure>
+
+        <p>
+          „Jarik” to Jarosław Michajłow, 37-letni Rosjanin z obwodu
+          rostowskiego, który graniczy z Ukrainą. Od co najmniej 2015 r. był
+          poszukiwany przez rosyjskie FSB z paragrafu za przemyt broni,
+          materiałów wybuchowych lub radioaktywnych.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-jarik"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#tg"
+      >
+      <p>
+          Sprawdzamy - Rosjanie przestali go szukać w 2022 r. To wtedy został
+          prawdopodobnie zwerbowany. Wynajmowanie kryminalistów w zamian za
+          rozwiązanie problemów z prawem to praktyka znana nie tylko wśród
+          rosyjskich służb.
+        </p>
+        <p>
+          Co prawda Michałjow dwa lata później dostaje wyrok za handel
+          niebezpiecznymi towarami, ale wygląda na to, że uniknął odsiadki.
+          Wiemy, że w ostatnich latach posługiwał się fałszywymi ukraińskimi
+          paszportami na nazwiska Danił Gromow i Danił Likczin. I że w marcu
+          tego roku ponownie pojawił się w rosyjskim rejestrze poszukiwanych.
+          Dlaczego? Niewykluczone, że po to, aby w przypadku zatrzymania na
+          Zachodzie Rosja mogła domagać się jego ekstradycji (tak samo jak po
+          zatrzymaniu Bezrukawego).
+        </p>
+        <p>
+          Michajłowa ściga litewska policja, według naszych informacji ukrywa
+          się w Azerbejdżanie.
+        </p>
+        <p>
+          Według naszych źródeł w europejskich służbach, Michajłow ze swojego
+          konta na Telegramie poza znaną nam już „paczką od komandora” miał
+          związek z co najmniej trzema innymi, tajnymi operacjami Rosjan.
+          Pierwsza to podpalenie centrum handlowego Marywilska w Warszawie w
+          maju 2024 r. (straty wyliczono na kilkaset milionów). Ogień strawił
+          ponad 1300 sklepów, pracę straciło tysiące handlarzy i ich
+          pracowników.
+        </p>
+        <p>
+          Druga operacja, w której koordynację był zaangażowany Michajłow, to
+          podpalenie sklepu Ikea w Wilnie w maju 2024 r. W tym roku władze
+          Polski i Litwy oficjalnie ogłosiły, że pożary na Marywilskiej i w
+          Wilnie były efektem działań rosyjskich służb. I że w obu wypadkach
+          ogień podłożyły te same osoby.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-jarik"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#tg"
+      >
+        <p>
+          Cynglem, sprawcą obu podpaleń, był 17-letni Ukrainiec Daniil Bardadim.
+          Litewska policja zatrzymała go w drodze na Łotwę, gdzie chciał dokonać
+          kolejnego sabotażu. Miał przy sobie takie same materiały wybuchowe jak
+          te, które skrywała „paczka od komandora”. Dostał je od Litwina
+          Šuranovasa, który brał udział w jej transporcie (to nazwisko pojawi
+          się jeszcze w tej historii).
+        </p>
+        <p>
+          Trzeci sabotaż Michałjowa to „testowa” wysyłka paczek z Warszawy do
+          USA i Kanady. W tej operacji przez Telegram wydawał polecenia
+          Bezrukawnemu – koledze „Pączka” wydanemu Polsce przez Bośnię i
+          Hercegowinę.
+        </p>
+        <p>
+          Obie operacje wysyłki paczek (tych do Ameryki Północnej i tych
+          zakończonych wybuchami w Europie) są objęte tym samym śledztwem
+          Prokuratury Krajowej.
+        </p>
+        <p>
+          Jak informuje FRONTSTORY.PL łódzka Prokuratura Okręgowa, kolejnym
+          wątkiem tej sprawy jest podpalenie sklepu Leroy Merlin w Łodzi w lipcu
+          2024 r. O tym, że pożar był wynikiem sabotażu, informujemy jako
+          pierwsi. Lokalne media donosiły rok temu, że powodem pożaru
+          prawdopodobnie było nieprawidłowe składowanie środków ochrony roślin.
+          Pożar udało się ugasić, ale straty oszacowano na 200 tys. zł. W tej
+          akcji też brał udział jeden z sabotażystów transportujących „przesyłkę
+          od komandora”.
+        </p>
+
+        <p>
+          W akcjach sabotażowych w Polsce i krajach bałtyckich przewijają się ci
+          sami bohaterowie. Prawdopodobnie są członkami tej samej siatki. Kto
+          nią dowodzi? „Jarik” Michajłow, tajemniczy koordynator z Telegrama?
+          Niekoniecznie. Z naszych informacji wynika, że mężczyzna jest jedynie
+          kimś w rodzaju menedżera średniego szczebla na kontrakcie z GRU.
+        </p>
+        <p>Decyzje w sprawie ataków zapadają wyżej.</p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-gru"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#gru"
+      >
+        <h2>Akwarium: zarządza sabotażystami</h2>
+        <p>
+          Polecenia dla „Pączka” i innych sabotażystów Michajłow dostaje z
+          telegramowych kont o pseudonimie „Warrior” [ang. wojownik].
+          Ustaliliśmy, że Warrior” bezpośrednio koordynował też działania dwóch
+          innych sabotażystów zaangażowanych w operację z paczkami.
+        </p>
+        <p>
+          Według naszych rozmówców z europejskich służb konto „Warriora” na
+          Telegramie obsługuje ktoś z centrali GRU. Dokładnie: z jej nowej
+          jednostki, utworzonej rok po inwazji na Ukrainę – Departamentu Zadań
+          Specjalnych (ros. SSD), z siedzibą w przeszklonym budynku na obrzeżach
+          Moskwy, zwanego „akwarium”.
+        </p>
+        <p>
+          SSD to szczególna odnoga szpiegowskiej centrali. Według Wall Street
+          Journal jednostka przejęła część zadań FSB, wchłonęła też słynną
+          jednostkę 29155, odpowiedzialną za zamach na Siergieja Skripala. SSD
+          organizuje akcje dywersyjne na Zachodzie.
+        </p>
+        <p>
+          Najbardziej znanymi oficerami SSD są pułkownik Denis Smoljaninow i
+          jego kolega Władimir Lipczenko. Według ustaleń Dossier Center i
+          Süddeutsche Zeitung obaj byli związani z operacją wysyłania
+          wybuchowych paczek.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-airbnb"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#airbnb"
+      >
+        <h2>„Pączek”: aktywuje bomby</h2>
+        <p>
+          Wróćmy jeszcze do „Pączka”. Dzień po odebraniu w Wilnie paczki z
+          bagażnika toyoty, 28 czerwca 2024 r., zanosi ją do mieszkania
+          wynajętego przez Airbnb. Kto je wynajął? Nie wiemy, wynajmujący podał
+          fałszywe dane i fałszywe, polskie nazwisko.
+        </p>
+
+        <figure>
+          <img
+            src="https://frontstory.pl/wp-content/uploads/2025/09/airbnb1.jpg"
+            width="400"
+            height="300"
+            alt="Tall apartment building with multiple balconies and a ground-floor entrance, located on a city street with parked cars and trees. The environment appears urban and quiet. The image is from Google Street View."
+          />
+          <figcaption>
+            <i
+              >Budynek, do którego Chebanenko przyniósł paczkę. Fot. Google
+              Street View</i
+            >
+          </figcaption>
+        </figure>
+
+        <p>
+          W mieszkaniu „Pączek” rozdziela zawartość paczki na cztery osobne
+          przesyłki. Oprócz sprzętu sportowego i zabawek erotycznych wkłada do
+          nich cztery prowizoryczne bomby. Poduszki masujące skrywają w sobie
+          zapalniki, materiał wybuchowy, nitrometan, upchnięty jest w tubkach po
+          kosmetykach.
+        </p>
+        <p>
+          Do pełnego uzbrojenia bomb brakuje już tylko aktywowania mechanizmów
+          czasowych, dzięki którym bomby odpalą się o określonej porze.
+        </p>
+        <p>
+          Na polecenie „Jarika” Michajłowa „Pączek” aktywuje bomby i wychodzi z
+          mieszkania.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-airbnb"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#suranovas, #airbnb"
+      >
+        <h2>Litwin: gubi się i przerywa akcję</h2>
+        <p>
+          Na ostatniej prostej do akcji wkracza Aleksandr Šuranovas, potężnej
+          budowy Litwin po pięćdziesiątce. To specjalista od brudnej roboty.
+          Dekadę temu był zaangażowany w Recyclix – jedną z największych,
+          polskich piramid finansowych (działała w latach 2015-2017). W lipcu
+          2025 r. FRONTSTORY.PL wspólnie z litewską telewizją publiczną LRT
+          ujawniły, że Recykliksem kierowali Rosjanie, którzy kilka lat później
+          stworzyli giga piramidę Juicy Fields i ukradli niemal 700 mln euro.
+        </p>
+
+        <p>Aleksandr w polskiej piramidzie był jedynie słupem.</p>
+        <p>
+          Zadanie, które dostaje teraz od koordynatora z Telegramu, jest proste.
+          Ma odebrać paczki z mieszkania, w którym zostawił je „Pączek”. Dwie z
+          nich ma wysłać do Polski, a dwie do Wielkiej Brytanii.
+        </p>
+        <p>Ale Šuranovas zawala. Gubi się i nie odnajduje właściwego adresu.</p>
+        <p>Porażka Litwina przerywa akcję GRU.</p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-bagaznik"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#bagaznik"
+      >
+        <p>
+          „Jarik” Michajłow zarządza ewakuację. Tego samego dnia każe „Pączkowi”
+          wrócić do mieszkania i deaktywować bomby.<br />
+          Ale cztery dni później „Pączek” wiezie paczki do Kowna. 9 lipca jedzie
+          po nie Wladyslaw Barkow, 37-latek z Ukrainy, sterowany przez „Jarika”.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-granica"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#granica"
+      >
+        <p>
+          Następnie wyjeżdża do Polski (z paczkami w bagażniku). Tu ich trop
+          urywa się na kilka dni.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-bus"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#bus"
+      >
+        <p>
+          Nie wiemy, jaką drogą trafiają do Mołdawii, ale 12 lipca paczki są już
+          w luku turystycznego autokaru jadącego z Mołdawii do Łotwy. W Rydze
+          znów odbiera je wysłannik Andrieja, oficera z radzieckiego okrętu
+          podwodnego.
+        </p>
+
+        <p>
+          Paczki z bombami przekraczają kilka granic, podróżując tuż obok
+          nieświadomych niczego turystów.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-bus"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#bus">
+        <h2>Paczka: krąży po Europie</h2>
+        <p>
+          Tym razem Andriej nie może dodzwonić się do Vasilijsa, który odebrał
+          paczkę za pierwszym razem. W pośpiechu angażuje więc kolejnego
+          znajomego z marynarki wojennej – Aleksandra Kacersa, byłego sternika
+          okrętu podwodnego, który mieszka w Rydze. Żeby go przekonać, gra na
+          sentymentach: wysyła wspólne zdjęcie z dawnych czasów.
+        </p>
+        <figure>
+          <img
+            src="https://frontstory.pl/wp-content/uploads/2025/09/katser.jpeg"
+            width="400"
+            height="300"
+            alt="Katser"
+          />
+          <figcaption>
+            <i>Aleksandr Kacers w czasie służby w marynarce. Fot. ok.ru</i>
+          </figcaption>
+        </figure>
+
+        <p>
+          Aleksandr zgadza się pomóc. Na dworzec autobusowy wysyła własnego
+          pasierba. Później paczkę przekazuje siostrzeńcowi Vasilijsa Kovacsa
+          (tego od pistoletu pod zlewem). Przesyłka zatacza koło po Europie, co
+          najmniej pięć razy mijając granice krajów bałtyckich i Polski. A
+          Andriej po raz kolejny prosi Vasilijsa o zawiezienie jej „krewnym
+          komandora”.
+        </p>
+        <p>
+          Dlaczego paczka znów wyrusza w drogę? W rozmowie z Re:Baltica krewny
+          Vasilijsa wspomina, że tym razem był on bardziej podejrzliwy i z
+          początku odmówił prośbie.
+        </p>
+        <p>
+          W końcu jednak uległ - w końcu o pomoc prosił chrzestny jego dziecka.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-ryga"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#ryga"
+      >
+      <h2>„Warrior”: znów werbuje na Telegramie</h2>
+        <p>
+          Dalsza trasa paczki niemal dokładnie powtarza pierwsze okrążenie.
+          Vasilijs razem z siostrzeńcami 17 lipca ponownie zawożą ją toyotą do
+          Wilna.
+        </p>
+      </section>
+      <section
+        class="step"
+        data-camera="#cam-bagaznik"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#bagaznik"
+      >
+        <p>
+          W Wilnie przekazują Władyslawowi Barkowowi, znanemu jednemu z
+          podopiecznych „Jarika” Michajłowa z Telegrama.
+        </p>
+        <p>
+          Barkow w bagażniku lexusa przewozi ją teraz do Kowna. Auto zostawia
+          przy spółdzielczych garażach z radzieckich czasów.
+        </p>
+        <p>
+          Tam przejmuje je Wladyslaw Derkawec, drobny, 27-letni Ukrainiec. Do
+          Kowna przyjechał aż spod Katowic, gdzie rok wcześniej sąd
+          nieprawomocnie skazał go na dwa lata i 10 miesięcy za pranie brudnych
+          pieniędzy. Tamtą fuchę, wspólnie z kolegą ze szkoły, również znalazł
+          na Telegramie. Na polecenie nieznajomego wypłacali gotówkę z
+          bankomatów i wymieniali ją na kryptowaluty. Na sali sądowej
+          dowiedzieli się, że pieniądze, którymi kręcili, pochodziły z wyłudzeń
+          przez SMS-y.
+        </p>
+        <p>
+          Zanim wyrok w Polsce zdąży się uprawomocnić, Wladyslaw znów znajduje
+          pracę z Telegrama. Zleceniodawca to „Warrior”, operator ze
+          specjednostki GRU w Moskwie.
+        </p>
+        <p>
+          To „Warrior” każe zawieźć przesyłkę do Wilna. Derkawec aktywuje bomby
+          przy placu w centrum stolicy i przewozi je do hotelu Stay Express. Tam
+          przepakowuje je do czterech oddzielnych paczek.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-dhl"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#dhl"
+      >
+        <h2>Bomba: płonie na lotnisku</h2>
+        <p>
+          Tym razem Šuranovas, potężny Litwin, wreszcie trafia pod właściwy
+          adres. Posługując się fałszywym nazwiskiem, dwie paczki w punkcie DHL
+          nadaje do Wielkiej Brytanii. Dwie kolejne przez DPD - do Polski.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-fires"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#fire-uk, #fire-pl, #fire-ge"
+      >
+        <p>
+          20 lipca o godz. 5:45 pierwsza przesyłka zapala się na lotnisku w
+          Lipsku w Niemczech. Niemiecki szef Urzędu Ochrony Konstytucji, Thomas
+          Haldenwang, powie później w Bundestagu, że gdyby paczka zapaliła się
+          podczas lotu, „skończyłoby się to katastrofą”.
+        </p>
+        <p>
+          Następnego dnia, 21 lipca, o godz. 9., druga paczka zapala się
+          niedaleko Warszawy. W magazynie firmy kurierskiej DPD, w przyczepie
+          ciężarówki, wybucha pożar. Aby ugasić płomienie potrzeba czterech ekip
+          strażackich. Naczepa płonie doszczętnie.
+        </p>
+        <p>
+          Trzy dni później, 22 lipca, trzecia paczka zapala się w magazynie DHL
+          w Birmingham.
+        </p>
+        <p>
+          Czwartą paczkę przechwytuje już polska ABW. Służby odkrywają ukryty w
+          poduszce do masażu zapalnik z zegarem i substancję łatwopalną.
+        </p>
+      </section>
+
+      <section
+        class="step"
+        data-camera="#cam-wide"
+        data-zoom="fit"
+        data-speed="2000"
+        data-show="#airbnb, #omniva, #miroshnikov, #baburov, #lodz, #bagaznik, #ryga, #tg, #dhl, #fire-pl, #fire-uk, #fire-ge, #granica, #bus, #gru"
+      >
+        <h2>GRU: rekrutuje tysiące sabotażystów</h2>
+        <p>
+          Rosyjskie operacje wysyłki wybuchowych paczek od komandora oraz paczek
+          “testowych” wysłanych do Ameryki Północnej bada dziś międzynarodowy
+          zespół w ramach Eurojustu.
+        </p>
+        <p>
+          W wyniku śledztwa grupa sabotażystów zaangażowanych w przesyłanie
+          paczek siedzi w więzieniach w Radomiu (Bezrukawny i Derkawec),
+          Włocławku (Jewsejew), Barczewie („Pączek”) i Wołowie na Dolnym Śląsku
+          (Barkow). Dwóch kolejnych siedzi na Litwie (Kovacs i Šuranovas; Kacers
+          i siostrzeńcy Kovacsa już opuścili areszt). Dzień przed naszą
+          publikacją, estoński Policyjny Urząd Bezpieczeństwa (Kapo)
+          poinformował naszych partnerów z Delfi, że w związku ze sprawą,
+          zatrzymał także dwie osoby (nie znamy ich tożsamości i roli). „Jarik”
+          vel Michajłow uciekł, gdy polskie służby zatrzymały „Pączka” i
+          Bezrukawnego. Polska prokuratura zarzuca im udział w sabotażu i
+          zorganizowanej grupie przestępczej.
+        </p>
+        <p>
+          Jak wynika z naszego śledztwa, „Jarik” w akcji ataków na Europę był
+          jednym z co najmniej kilku operatorów średniego szczebla. Ludzie z
+          jego poziomu w GRU koordynowali siatki „jednorazowych sabotażystów”,
+          złowionych na Telegramie lub przez krewnych i znajomych. Często
+          nieświadomych, że biorą udział w operacji rosyjskich służb.
+        </p>
+        <p>
+          Sabotażyści z Telegrama dostawali kilkaset do kilku tysięcy dolarów za
+          zlecenie. Szkody, jakie wyrządzili, podpalając hipermarkety, centra
+          logistyczne i handlowe, sięgają setek milionów złotych.
+        </p>
+        <p>
+          Według naszych rozmówców z europejskich służb ataki sabotażowe, które
+          Kreml prowadzi w Europie, są ze sobą powiązane na poziomie operatorów
+          takich jak Jarik. Tropy większości z tych historii wiodą do
+          specjednostki GRU pod Moskwą.
+        </p>
+        <p>
+          Pod koniec lipca premier Donald Tusk podsumował działania polskich
+          organów ścigania w tych sprawach: - Mamy 32 osoby zatrzymane i
+          podejrzane o współpracę z rosyjskimi służbami, które zlecały tym
+          osobom albo akty dywersji, albo pobicia. Ta lista się nie wyczerpuje.
+          Czas też ogłosić prawdziwy alert dla wszystkich służb.
+        </p>
+        <p>
+          Z ostrożnych szacunków służb wynika, że Rosja do sabotaży w Europie
+          mogła zrekrutować już kilkadziesiąt tysięcy osób.
+        </p>
       </section>
 
       <div class="spacer"></div>
@@ -545,42 +1492,35 @@
 
       const io = new IntersectionObserver(
         (entries) => {
-          // Optional: process exits before enters to avoid flicker
           entries.sort(
             (a, b) => (a.isIntersecting ? 1 : 0) - (b.isIntersecting ? 1 : 0)
-          );
+          ); // exits before enters
 
           entries.forEach((entry) => {
             const s = entry.target;
             const active =
               entry.isIntersecting && entry.intersectionRatio > 0.55;
-            s.classList.toggle("is-active", active);
 
             if (active) {
-              // camera move
+              // always recompute from a clean slate
+              togglables().forEach((el) => el.classList.remove("on"));
+
+              if (s.dataset.only) {
+                setShow(s.dataset.only, true);
+              } else {
+                setShow(s.dataset.show, true);
+                setShow(s.dataset.hide, false);
+              }
+
               goToTarget(
                 s.dataset.camera,
                 s.dataset.zoom || "fit",
                 s.dataset.padding || 0,
                 s.dataset.speed || 1200
               );
-
-              // ENTER: apply visibility for this step
-              if (s.dataset.only) {
-                svg
-                  .querySelectorAll(".toggle.on")
-                  .forEach((el) => el.classList.remove("on"));
-                setShow(s.dataset.only, true);
-              } else {
-                setShow(s.dataset.show, true);
-                setShow(s.dataset.hide, false);
-              }
-            } else {
-              // EXIT: undo this step’s changes (so items disappear on scroll back)
-              if (s.dataset.only) setShow(s.dataset.only, false);
-              if (s.dataset.show) setShow(s.dataset.show, false);
-              if (s.dataset.hide) setShow(s.dataset.hide, true);
             }
+
+            // remove the EXIT re-toggling entirely
           });
         },
         { threshold: [0, 0.55, 1], rootMargin: "-20% 0% -20% 0%" }
